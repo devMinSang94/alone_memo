@@ -67,16 +67,20 @@
 
         function postArticle()
         {
+            let url_give = $('#post-url').val()
+            let comment_give = $('#post-comment').val()
+
             $.ajax({
                 type: "POST",
                 url: "/memo",
-                data: {},
+                data: {'url_give': url_give, 'comment_give': comment_give},
                 success: function (response)
                 { // 성공하면
                     if (response["result"] == "success")
                     {
                         alert(response["msg"]);
                     }
+                    document.location.reload()
                 }
             })
         }
@@ -91,7 +95,19 @@
                 {
                     if (response["result"] == "success")
                     {
-                        alert(response["msg"]);
+                        let articles = response['articles']
+                        for (let i = 0; i < articles.length; i++)
+                        {
+                            let article = articles[i]
+                            let title = article['title']
+                            let url = article['url']
+                            let image = article['image']
+                            let description = article['description']
+                            let comment = article['comment']
+                            makeCard(url,title,description,comment,image)
+
+                        }
+
                     }
                 }
             })
@@ -99,7 +115,17 @@
 
         function makeCard(url, title, desc, comment, image)
         {
+            let tempHtml = `<div class="card">
+                        <img class="card-img-top" src="${image}" alt="Card image cap">
+                        <div class="card-body">
+                        <a href="${url}" target="_blank" class="card-title">${title}</a>
+                        <p class="card-text">${desc}</p>
+                        <p class="card-text comment">${comment}</p>
+                        </div>
+                    </div>`;
+            $("#cards-box").append(tempHtml);
         }
+
     </script>
 </head>
 <body>
@@ -127,66 +153,19 @@
         </div>
     </div>
     <div id="cards-box" class="card-columns">
+        {% for memo in memos %}
         <div class="card">
             <img class="card-img-top"
-                 src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.aadptive.767.1535627244182.jpg"
+                 src="{{ memo['image'] }}"
                  alt="Card image cap">
             <div class="card-body">
-                <a href="#" class="card-title">여기 기사 제목이 들어가죠</a>
-                <p class="card-text">기사의 요약 내용이 들어갑니다. 동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라만세 무궁화 삼천리 화려강산...</p>
-                <p class="card-text comment">여기에 코멘트가 들어갑니다.</p>
+                <a href="{{ memo['url']}}" class="card-title">{{ memo['title']}}</a>
+                <p class="card-text">{{ memo['description']}}</p>
+                <p class="card-text comment">{{ memo['comment']}}</p>
             </div>
         </div>
-        <div class="card">
-            <img class="card-img-top"
-                 src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg"
-                 alt="Card image cap">
-            <div class="card-body">
-                <a href="#" class="card-title">여기 기사 제목이 들어가죠</a>
-                <p class="card-text">기사의 요약 내용이 들어갑니다. 동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라만세 무궁화 삼천리 화려강산...</p>
-                <p class="card-text comment">여기에 코멘트가 들어갑니다.</p>
-            </div>
-        </div>
-        <div class="card">
-            <img class="card-img-top"
-                 src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg"
-                 alt="Card image cap">
-            <div class="card-body">
-                <a href="#" class="card-title">여기 기사 제목이 들어가죠</a>
-                <p class="card-text">기사의 요약 내용이 들어갑니다. 동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라만세 무궁화 삼천리 화려강산...</p>
-                <p class="card-text comment">여기에 코멘트가 들어갑니다.</p>
-            </div>
-        </div>
-        <div class="card">
-            <img class="card-img-top"
-                 src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg"
-                 alt="Card image cap">
-            <div class="card-body">
-                <a href="#" class="card-title">여기 기사 제목이 들어가죠</a>
-                <p class="card-text">기사의 요약 내용이 들어갑니다. 동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라만세 무궁화 삼천리 화려강산...</p>
-                <p class="card-text comment">여기에 코멘트가 들어갑니다.</p>
-            </div>
-        </div>
-        <div class="card">
-            <img class="card-img-top"
-                 src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg"
-                 alt="Card image cap">
-            <div class="card-body">
-                <a href="#" class="card-title">여기 기사 제목이 들어가죠</a>
-                <p class="card-text">기사의 요약 내용이 들어갑니다. 동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라만세 무궁화 삼천리 화려강산...</p>
-                <p class="card-text comment">여기에 코멘트가 들어갑니다.</p>
-            </div>
-        </div>
-        <div class="card">
-            <img class="card-img-top"
-                 src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg"
-                 alt="Card image cap">
-            <div class="card-body">
-                <a href="#" class="card-title">여기 기사 제목이 들어가죠</a>
-                <p class="card-text">기사의 요약 내용이 들어갑니다. 동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라만세 무궁화 삼천리 화려강산...</p>
-                <p class="card-text comment">여기에 코멘트가 들어갑니다.</p>
-            </div>
-        </div>
+        {% endfor %}
+
     </div>
 </div>
 </body>
