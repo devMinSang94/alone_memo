@@ -1,7 +1,14 @@
-from flask import Flask
+from flask import Flask, render_template
 
 # 플라스크 웹 서버 생성하기
 app = Flask(__name__)
+
+
+# API 추가
+@app.route('/', methods=['GET'])  # 데코레이터 문법
+def index():
+    return render_template('index.html', test ='테스트')
+
 
 # app.py 파일을 직접 실행시킬 떄 동작시킴
 if __name__ == '__main__':
