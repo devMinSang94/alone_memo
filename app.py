@@ -1,3 +1,5 @@
+import hashlib
+
 import requests
 from flask import Flask, render_template, request, jsonify
 from bs4 import BeautifulSoup
@@ -78,7 +80,30 @@ def register():
     return render_template('register.html')
 
 
-# app.py 파일을 직접 실행시킬 떄 동작시킴
+@app.route('/login', methods=['POST'])
+def api_login():
+    id = request.form['id_give']
+    pw = request.form['pw_give']
+    # TODO id , pw 검증 후에 JWT 만들어서 리턴
+
+
+@app.route('/api/register', methods=['POST'])
+def api_register():
+    id = request.form['id_give']
+    pw = request.form['pw_give']
+
+    #salting
+    # pw + 랜덤 문자열 추가 (솔트)
+    # 솔트 추가된 비밀번호를 해시
+    # DB에 저장할 떄는 (해시 결과물 + 적용할 솔트) 묶어서 적용
+
+    # 회원가입
+    pw_hash = hashlib.sha256(pw.encode()).hexdigest()
+    db.users.insert_one({'id': id, 'pw': pw_hash})
+    return jsonify({'result': 'success'})
+
+
+    # app.py 파일을 직접 실행시킬 떄 동작시킴
 if __name__ == '__main__':
     app.run(
         '0.0.0.0',  # 모든 IP 에서 오는 요청을 허용
