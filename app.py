@@ -67,6 +67,10 @@ def list_memo():
     }
     return jsonify(result)
 
+@app.route('/login',methods=['GET'])
+def login():
+    return render_template('login.html')
+
 
 # app.py 파일을 직접 실행시킬 떄 동작시킴
 if __name__ == '__main__':
