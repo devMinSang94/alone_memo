@@ -12,6 +12,7 @@ requests = "^2.25.1"
 bs4 = "^0.0.1"
 PyJWT = "^2.1.0"
 python-dotenv = "^0.17.1"
+pytest-flask = "^1.2.0"
 
 [tool.poetry.dev-dependencies]
 
