@@ -11,6 +11,7 @@
     <!-- JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
             integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
             crossorigin="anonymous"></script>
@@ -51,18 +52,115 @@
 
         function setUserInfo()
         {
+            let userInfo = $('#user-info')
             let token = $.cookie('loginToken')
-            console.log(token)
-
-            if(token == undefined)
+            if (token === undefined)
             {
                 window.location.href = '/login'
-            }
-            else
+            } else
             {
-                // TODO 로그인 이후 메모장 화면 만들기 구현
+                $.ajax({
+                    type: 'POST',
+                    url: '/user',
+                    headers: {'authorization': `Bearer ${token}`},
+                    data: {},
+                    success: function (response)
+                    {
+                        if (response['result'] === 'success')
+                        {
+                            let id = response['id']
+                            userInfo.append(`
+                                <div class="btn btn-primary" id="user_id">${id}</div>
+                                <div class="btn btn-primary" onclick="logOut()">로그아웃</div>
+                                <div class="btn btn-primary" onclick="AccountDelete(id)">회원탈퇴</div>
+                            `)
+                        } else
+                        {
+                            alert('다시 로그인해주세요.')
+                            window.location.href = '/login'
+                        }
+
+                    }
+                })
             }
         }
+
+        // function setUserInfo()
+        // {
+        //     let token = $.cookie('loginToken')
+        //     console.log(token)
+        //     let userinfo = $('#user-info')
+        //
+        //     if (token == undefined)
+        //     {
+        //         window.location.href = '/login'
+        //     } else
+        //     {
+        //         // jwt에 해당하는 사용자 정보를 가져오기
+        //         $.ajax({
+        //             type: "POST",
+        //             url: "/user",
+        //             headers: {'authorization': `Bearer ${token}`},
+        //             data: {},
+        //             success: function (response)
+        //             {
+        //                 if (response['result'] == 'success')
+        //                 {
+        //                     let id = response['id']
+        //                     userinfo.append(`
+        //                         <div class = "btn btn-primary">${id}</div>
+        //                         <div class = "btn btn-primary" onclick="logout">로그아웃</div>
+        //                     `)
+        //                 } else
+        //                 {
+        //                     alert('다시 로그인해주세요.')
+        //                     window.location.href = '/login'
+        //                 }
+        //             }
+        //         })
+        //     }
+        // }
+
+
+        function logOut()
+        {
+            // 쿠키의 jwt 삭제
+            $.removeCookie('loginToken', {path: '/'})
+            alert('로그아웃')
+            //로그인 페이지로 이동
+            window.location.href = '/login'
+        }
+
+        function AccountDelete()
+        {
+            let id = $('#user_id').val()
+            console.log(id)
+            $.ajax(
+                {
+                    type: 'POST',
+                    url: '/delete',
+                    data: {'id': id},
+                    success: function (response)
+                    {
+                        if (response['result'] == 'success')
+                        {
+                            alert('회원을 삭제했습니다.')
+                            //로그인 페이지로 이동
+                            // 쿠키의 jwt 삭제
+                            $.removeCookie('loginToken', {path: '/'})
+                            alert('로그아웃')
+                            //로그인 페이지로 이동
+                            window.location.href = '/login'
+                        }
+                        else
+                        {
+                            alert(response['result'])
+                        }
+                    }
+                }
+            )
+        }
+
         function openClose()
         {
             // id 값 post-box의 display 값이 block 이면(= 눈에 보이면)
@@ -83,13 +181,15 @@
 
         function postArticle()
         {
+            let token = $.cookie('loginToken')
             let url_give = $('#post-url').val()
             let comment_give = $('#post-comment').val()
 
             $.ajax({
                 type: "POST",
                 url: "/memo",
-                data: {'url_give': url_give, 'comment_give': comment_give},
+                headers: {'authorization': `Bearer ${token}`},
+                data: {'url_give': url_give, 'comment_give': comment_give,},
                 success: function (response)
                 { // 성공하면
                     if (response["result"] == "success")
@@ -103,6 +203,7 @@
 
         function showArticles()
         {
+
             $.ajax({
                 type: "GET",
                 url: "/memo",
@@ -146,6 +247,7 @@
 </head>
 <body>
 <div class="wrap">
+    <div id="user-info"></div>
     <div class="jumbotron">
         <h1 class="display-4">{{ test }}메모장!</h1>
         <p class="lead">중요한 링크를 저장해두고, 나중에 볼 수 있는 공간입니다</p>
