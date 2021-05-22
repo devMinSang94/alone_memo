@@ -1,5 +1,6 @@
 import hashlib
 
+import jwt
 from pymongo import MongoClient
 
 test_database_name = 'spartatest'
@@ -9,13 +10,24 @@ db = client.get_database(test_database_name)
 
 def test_로그인(client):
     data = {
-        'id_give': 'test',
+        'id_give': 'tester02',
         'pw_give': 'test',
     }
-    user = db.find_one(data)
 
-    if user:
-        assert print('성공')
+    # 먼저 회원가입
+    client.post('/api/register', data=data)
+
+    # 로그인하기
+    response = client.post(
+        '/api/login',
+        data=data
+    )
+    assert response.status_code == 200
+    assert response.json['result'] == 'success'
+
+    token = response.json['token']
+    payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+    assert payload['id'] == 'tester02'
 
 
 def test_회원가입(client):
