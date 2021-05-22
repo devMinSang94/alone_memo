@@ -1,5 +1,6 @@
+import pytest as pytest
 from pymongo import MongoClient
-import pytest
+
 
 import app as flask_app
 
@@ -18,3 +19,4 @@ def app():
     # 여기서 부터 모든 테스트가 완료되고 나서 실행됨
     client.drop_database(test_database_name)
     print('테스트 DB 제거 완료 ')
+
