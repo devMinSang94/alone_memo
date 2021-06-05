@@ -1,4 +1,4 @@
-name: alonememo test
+name: alonememo tests
 
 
 on: [pull_request]
