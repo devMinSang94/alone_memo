@@ -20,7 +20,16 @@ jobs:
         uses: supercharge/mongodb-github-achion@1.4.1
         with:
           mongodb-version: 4.4
-      - name: install requirments
+      - name: install requirmentvs
         run: pip install -r requirements.txt
       - name: run pytest
+        # 환경변수 설정
+        # .env 대신 추가
+        env:
+          JWT_SECRET: "secret"
+          CLIENT_ID: ""
+          CALLBACK_URL: ""
+          SERVICE_URL: ""
+          MONGODB_HOST: "mongodb://localhost:27017"
         run: pytest
+
