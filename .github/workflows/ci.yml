@@ -17,7 +17,7 @@ jobs:
         with:
           python-version: 3.9
       - name: set up monggodb
-        uses: supercharge/mongodb-github-achion@1.4.1
+        uses: supercharge/mongodb-github-action@1.4.1
         with:
           mongodb-version: 4.4
       - name: install requirmentvs
