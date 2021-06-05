@@ -11,7 +11,7 @@ jobs:
     steps:
       # github actions 라이브러리를 이용해서 코드를 가져오기
       - name: test
-        uses: actions/chechout@v2
+        uses: actions/checkout@v2
       - name: set up python 3.9
         uses: action/setup-python@v2
         with:
