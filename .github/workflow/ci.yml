@@ -1,0 +1,26 @@
+name: alonememo tests
+
+
+on: [pull_request]
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # github actions 라이브러리를 이용해서 코드를 가져오기
+      - name: test
+        uses: actions/chechout@v2
+      - name: set up python 3.9
+        uses: action/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: set up monggodb
+        uses: supercharge/mongodb-github-achion@1.4.1
+        with:
+          mongodb-version: 4.4
+      - name: install requirments
+        run: pip install -r requirements.txt
+      - name: run pytest
+        run: pytest
