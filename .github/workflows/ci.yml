@@ -1,0 +1,35 @@
+name: alonememo tests
+
+
+on: [pull_request]
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # github actions 라이브러리를 이용해서 코드를 가져오기
+      - name: test
+        uses: actions/checkout@v2
+      - name: set up python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: set up monggodb
+        uses: supercharge/mongodb-github-action@1.4.1
+        with:
+          mongodb-version: 4.4
+      - name: install requirmentvs
+        run: pip install -r requirements.txt
+      - name: run pytest
+        # 환경변수 설정
+        # .env 대신 추가
+        env:
+          JWT_SECRET: "secret"
+          CLIENT_ID: ""
+          CALLBACK_URL: ""
+          SERVICE_URL: ""
+          MONGODB_HOST: "mongodb://localhost:27017"
+        run: pytest
+
